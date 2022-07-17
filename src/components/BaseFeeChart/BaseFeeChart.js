@@ -26,14 +26,13 @@ export function BaseFeeChart(props) {
   const [oldestBlock, setOldestBlock] = useState(null)
   const [baseFeeData, setBaseFeeData] = useState(null)
 
-  // Query base fees of last 99 blocks then update state with data
+  // Periodically query base fees then update state with data
   useEffect(() => {
     if (providerRef.current) {
       async function queryFeeHistory() {
         await providerRef.current
           .send('eth_feeHistory', [99, 'latest'])
           .then(feeHistory => {
-            console.log(feeHistory)
             setOldestBlock(feeHistory.oldestBlock)
             setBaseFeeData(
               formatBaseFeeData(
@@ -44,13 +43,21 @@ export function BaseFeeChart(props) {
           })
           .catch(error => console.error(error))
       }
+      // Query once on load
       queryFeeHistory()
+
+      // Run  every 15 seconds
+      const queryInterval = setInterval(() => {
+        queryFeeHistory()
+      }, 15000)
+
+      return () => clearInterval(queryInterval)
     }
   }, [providerRef])
 
   return (
     baseFeeData && (
-      <LineChart height={400} width={768} data={baseFeeData}>
+      <LineChart height={400} width={900} data={baseFeeData}>
         <Line
           name={'Base Fee (gwei)'}
           type={'monotone'}
@@ -71,7 +78,7 @@ export function BaseFeeChart(props) {
           label={{
             value: 'Base Fee (gwei)',
             angle: -90,
-            offset: 20,
+            offset: 15,
             position: 'insideLeft'
           }}
         />
