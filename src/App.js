@@ -1,25 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useRef } from 'react'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import { ethers } from 'ethers'
+
+import { BaseFeeChart } from './components/BaseFeeChart'
+
+const API_URI =
+  'https://eth-mainnet.g.alchemy.com/v2/Jfww56qPimkBDLPOd6fPk_vFTZD1X6WQ'
+
+export function App() {
+  const providerRef = useRef(null)
+  const web3Ref = useRef(null)
+
+  // Initialize ethers provider
+  useEffect(() => {
+    if (!providerRef.current) {
+      const provider = new ethers.providers.AlchemyProvider(
+        'homestead',
+        'Jfww56qPimkBDLPOd6fPk_vFTZD1X6WQ'
+      )
+      providerRef.current = provider
+    }
+  }, [providerRef])
+
+  return <BaseFeeChart providerRef={providerRef} />
 }
-
-export default App;
