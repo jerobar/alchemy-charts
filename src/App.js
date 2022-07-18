@@ -5,10 +5,7 @@ import { AppShell, Container, Card, Space, Title, Text } from '@mantine/core'
 
 import { BaseFeeChart } from './components/BaseFeeChart'
 import { MinerFeeChart } from './components/MinerFeeChart'
-
-function AppHeader() {
-  return <div>AppHeader</div>
-}
+import { TokenChart } from './components/TokenChart'
 
 export function App() {
   const providerRef = useRef(null)
@@ -24,9 +21,9 @@ export function App() {
   }, [providerRef])
 
   return (
-    <AppShell header={<AppHeader />} padding={'md'}>
+    <AppShell padding={'md'}>
       <Container>
-        <Space h={40} />
+        <Space h={60} />
         <Card shadow={'sm'}>
           <Title order={2}>Ethereum Base Fee by Block Number</Title>
           <Space h={20} />
@@ -34,12 +31,21 @@ export function App() {
           <Space h={20} />
           <BaseFeeChart providerRef={providerRef} />
         </Card>
-        <Space h={40} />
+        <Space h={60} />
         <Card>
           <Title order={2}>Miner Fees by Block Number</Title>
           <Space h={20} />
           <MinerFeeChart providerRef={providerRef} />
         </Card>
+        <Space h={60} />
+        <Card>
+          <Title order={2}>Wrapped BTC Transfers</Title>
+          <Space h={20} />
+          <Text>Total transfer volume of Wrapped BTC by block number.</Text>
+          <Space h={20} />
+          <TokenChart providerRef={providerRef} />
+        </Card>
+        <Space h={80} />
       </Container>
     </AppShell>
   )
