@@ -23,14 +23,14 @@ function formatBaseFeeData(oldestBlock, baseFeePerGas) {
 }
 
 export function BaseFeeChart(props) {
-  const { providerRef } = props
+  const { provider } = props
   const [baseFeeData, setBaseFeeData] = useState(null)
 
   // Periodically query base fees then update state with data
   useEffect(() => {
-    if (providerRef.current) {
+    if (provider) {
       async function queryFeeHistory() {
-        await providerRef.current
+        await provider
           .send('eth_feeHistory', [99, 'latest'])
           .then(feeHistory => {
             setBaseFeeData(
@@ -52,7 +52,7 @@ export function BaseFeeChart(props) {
 
       return () => clearInterval(queryInterval)
     }
-  }, [providerRef])
+  }, [provider])
 
   return (
     <>

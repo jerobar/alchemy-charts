@@ -10,22 +10,20 @@ const signatureBytes = ethers.utils.toUtf8Bytes(signature)
 const TRANSFER_TOPIC = ethers.utils.keccak256(signatureBytes)
 
 export function TokenChart(props) {
-  const { providerRef } = props
+  const { provider } = props
   const [transferData, setTransferData] = useState(null)
 
   // Periodically query wrapped btc transfer data
   useEffect(() => {
-    if (providerRef.current) {
+    if (provider) {
       async function queryTransfers() {
-        const currentBlockNumber = await providerRef.current.send(
-          'eth_blockNumber'
-        )
+        const currentBlockNumber = await provider.send('eth_blockNumber')
         const toBlock = currentBlockNumber
         const fromBlock = ethers.BigNumber.from(toBlock)
           .sub(ethers.BigNumber.from(100))
           .toHexString()
 
-        await providerRef.current
+        await provider
           .send('eth_getLogs', [
             {
               fromBlock,
@@ -71,7 +69,7 @@ export function TokenChart(props) {
 
       return () => clearInterval(queryInterval)
     }
-  }, [providerRef])
+  }, [provider])
 
   return (
     <>

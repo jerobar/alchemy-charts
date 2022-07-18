@@ -41,16 +41,16 @@ async function getBlocks(provider, count) {
 }
 
 export function MinerFeeChart(props) {
-  const { providerRef } = props
+  const { provider } = props
   const [blockNumbers, setBlockNumbers] = useState([])
   const [minerFeeData, setMinerFeeData] = useState([])
   const [averageType, setAverageType] = useState('mean')
 
   // Query initial 5 blocks
   useEffect(() => {
-    if (providerRef.current && !minerFeeData.length) {
+    if (provider && !minerFeeData.length) {
       async function queryMinerFeeData() {
-        const blocks = await getBlocks(providerRef.current, 5)
+        const blocks = await getBlocks(provider, 5)
 
         setMinerFeeData(minerFeeData => [...minerFeeData, ...blocks])
         setBlockNumbers(blockNumbers => [
@@ -60,13 +60,13 @@ export function MinerFeeChart(props) {
       }
       queryMinerFeeData()
     }
-  }, [providerRef, minerFeeData])
+  }, [provider, minerFeeData])
 
   // Query new block every 7.5 seconds
   useEffect(() => {
-    if (providerRef.current) {
+    if (provider) {
       async function queryMinerFeeData() {
-        const blocks = await getBlocks(providerRef.current, 1)
+        const blocks = await getBlocks(provider, 1)
         const newBlocks = blocks.filter(
           block => !blockNumbers.includes(block.number)
         )
@@ -85,7 +85,7 @@ export function MinerFeeChart(props) {
 
       return () => clearInterval(queryInterval)
     }
-  }, [providerRef, minerFeeData])
+  }, [provider, minerFeeData])
 
   return (
     <div>

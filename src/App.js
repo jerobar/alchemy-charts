@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useState } from 'react'
 
 import { ethers } from 'ethers'
 import { AppShell, Container, Card, Space, Title, Text } from '@mantine/core'
@@ -8,17 +8,19 @@ import { MinerFeeChart } from './components/MinerFeeChart'
 import { TokenChart } from './components/TokenChart'
 
 export function App() {
-  const providerRef = useRef(null)
+  const [provider, setProvider] = useState(null)
 
   // Initialize ethers provider
   useEffect(() => {
-    if (!providerRef.current) {
-      providerRef.current = new ethers.providers.AlchemyProvider(
+    if (!provider) {
+      const provider = new ethers.providers.AlchemyProvider(
         'homestead',
         'Jfww56qPimkBDLPOd6fPk_vFTZD1X6WQ'
       )
+
+      setProvider(provider)
     }
-  }, [providerRef])
+  }, [provider])
 
   return (
     <AppShell padding={'md'}>
@@ -29,13 +31,13 @@ export function App() {
           <Space h={20} />
           <Text>Base fee shown in gwei. Refreshes every 15 seconds.</Text>
           <Space h={20} />
-          <BaseFeeChart providerRef={providerRef} />
+          <BaseFeeChart provider={provider} />
         </Card>
         <Space h={60} />
         <Card>
           <Title order={2}>Miner Fees by Block Number</Title>
           <Space h={20} />
-          <MinerFeeChart providerRef={providerRef} />
+          <MinerFeeChart provider={provider} />
         </Card>
         <Space h={60} />
         <Card>
@@ -43,7 +45,7 @@ export function App() {
           <Space h={20} />
           <Text>Total transfer volume of Wrapped BTC by block number.</Text>
           <Space h={20} />
-          <TokenChart providerRef={providerRef} />
+          <TokenChart provider={provider} />
         </Card>
         <Space h={80} />
       </Container>

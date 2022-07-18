@@ -1,5 +1,6 @@
 {
   "name": "alchemy-charts",
+  "homepage": "/alchemy-charts",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
