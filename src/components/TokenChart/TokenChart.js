@@ -42,9 +42,10 @@ export function TokenChart(props) {
                 blockNumber: ethers.BigNumber.from(
                   transfer.blockNumber
                 ).toNumber(),
-                transferVolume: ethers.utils.defaultAbiCoder
-                  .decode(['uint256'], transfer.data)[0]
-                  .toNumber()
+                transferVolume:
+                  ethers.utils.defaultAbiCoder
+                    .decode(['uint256'], transfer.data)[0]
+                    .toNumber() / 100_000_000
               }))
               // Remove duplicate block numbers
               .reduce((acc, { blockNumber, transferVolume }) => {
@@ -76,7 +77,7 @@ export function TokenChart(props) {
     <>
       <LineChart height={400} width={900} data={transferData}>
         <Line
-          name={'Transfers (gwei)'}
+          name={'Transfers (btc)'}
           type={'monotone'}
           dataKey={'transferVolume'}
           stroke={'#8884d8'}
@@ -93,7 +94,7 @@ export function TokenChart(props) {
         />
         <YAxis
           label={{
-            value: 'Transfers (gwei)',
+            value: 'Transfers (btc)',
             angle: -90,
             offset: 10,
             position: 'insideLeft'
