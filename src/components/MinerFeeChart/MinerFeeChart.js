@@ -8,7 +8,7 @@ import {
   Space,
   LoadingOverlay
 } from '@mantine/core'
-import { BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Bar } from 'recharts'
+import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts'
 
 import { getMinerFeeAverages } from '../../utils/transaction-utils'
 
@@ -103,8 +103,18 @@ export function MinerFeeChart(props) {
         />
       </Group>
       <Space h={20} />
-      <BarChart height={400} width={900} data={minerFeeData}>
-        <CartesianGrid strokeDasharray="3 3" />
+      <LineChart height={400} width={900} data={minerFeeData}>
+        <Line
+          dataKey={averageType === 'mean' ? 'meanMinerFee' : 'medianMinerFee'}
+          barSize={20}
+          name={
+            averageType === 'mean'
+              ? 'Mean Miner Fee (gwei)'
+              : 'Median Miner Fee (gwei)'
+          }
+          fill="#8884d8"
+        />
+        <CartesianGrid stroke={'#ccc'} strokeDasharray={'5 5'} />
         <XAxis
           dataKey={'number'}
           angle={30}
@@ -126,17 +136,7 @@ export function MinerFeeChart(props) {
           }}
         />
         <Tooltip labelFormatter={name => 'Block Number: ' + name} />
-        <Bar
-          dataKey={averageType === 'mean' ? 'meanMinerFee' : 'medianMinerFee'}
-          barSize={20}
-          name={
-            averageType === 'mean'
-              ? 'Mean Miner Fee (gwei)'
-              : 'Median Miner Fee (gwei)'
-          }
-          fill="#8884d8"
-        />
-      </BarChart>
+      </LineChart>
       <LoadingOverlay visible={minerFeeData.length === 0} />
     </div>
   )
