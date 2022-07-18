@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 
 import { ethers } from 'ethers'
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts'
+import { LoadingOverlay } from '@mantine/core'
 
 /**
  * Returns array of objects containing the block number and base fee in gwei.
@@ -23,7 +24,6 @@ function formatBaseFeeData(oldestBlock, baseFeePerGas) {
 
 export function BaseFeeChart(props) {
   const { providerRef } = props
-  const [oldestBlock, setOldestBlock] = useState(null)
   const [baseFeeData, setBaseFeeData] = useState(null)
 
   // Periodically query base fees then update state with data
@@ -33,7 +33,6 @@ export function BaseFeeChart(props) {
         await providerRef.current
           .send('eth_feeHistory', [99, 'latest'])
           .then(feeHistory => {
-            setOldestBlock(feeHistory.oldestBlock)
             setBaseFeeData(
               formatBaseFeeData(
                 feeHistory.oldestBlock,
@@ -56,7 +55,7 @@ export function BaseFeeChart(props) {
   }, [providerRef])
 
   return (
-    baseFeeData && (
+    <>
       <LineChart height={400} width={900} data={baseFeeData}>
         <Line
           name={'Base Fee (gwei)'}
@@ -78,12 +77,13 @@ export function BaseFeeChart(props) {
           label={{
             value: 'Base Fee (gwei)',
             angle: -90,
-            offset: 15,
+            offset: 10,
             position: 'insideLeft'
           }}
         />
         <Tooltip labelFormatter={name => 'Block Number: ' + name} />
       </LineChart>
-    )
+      <LoadingOverlay visible={!baseFeeData} />
+    </>
   )
 }

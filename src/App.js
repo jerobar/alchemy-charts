@@ -4,6 +4,7 @@ import { ethers } from 'ethers'
 import { AppShell, Container, Card, Space, Title, Text } from '@mantine/core'
 
 import { BaseFeeChart } from './components/BaseFeeChart'
+import { MinerFeeChart } from './components/MinerFeeChart'
 
 function AppHeader() {
   return <div>AppHeader</div>
@@ -34,6 +35,11 @@ export function App() {
           <BaseFeeChart providerRef={providerRef} />
         </Card>
         <Space h={40} />
+        <Card>
+          <Title order={2}>Miner Fees by Block Number</Title>
+          <Space h={20} />
+          <MinerFeeChart providerRef={providerRef} />
+        </Card>
       </Container>
     </AppShell>
   )
