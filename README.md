@@ -1,4 +1,4 @@
-# Assignment 6
+# Alchemy Charts
 
 A simple dashboard displaying data from an Alchemy node.
 
